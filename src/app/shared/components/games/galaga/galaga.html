@@ -1,0 +1,14 @@
+@if (isLoading) {
+  <div class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>Initializing Hand Tracking...</p>
+    </div>
+  </div>
+}
+
+<!-- Vídeo oculto — usado apenas como input do MediaPipe (câmera não aparece) -->
+<video id="galaga-cam" class="hidden-cam" autoplay playsinline></video>
+
+<!-- Canvas do jogo Galaga -->
+<canvas id="galaga-canvas" class="game-canvas"></canvas>

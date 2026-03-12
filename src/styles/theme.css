@@ -1,0 +1,15 @@
+/* theme.css: Definição das cores principais e secundárias com seus shades */
+
+:root {
+  --color-primary: #00E5FF;
+  --color-primary-light: #33EDFF;
+  --color-primary-dark: #009EB3;
+
+  /* Cor Secundária: Roxo vibrante */
+  --color-secondary: #C084FC;
+  --color-secondary-light: #D1A6FD;
+  --color-secondary-dark: #8B5CF6;
+}
+
+
+

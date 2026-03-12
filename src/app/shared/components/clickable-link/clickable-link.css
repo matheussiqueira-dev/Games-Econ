@@ -1,0 +1,6 @@
+/* ClickableLink styles */
+.clickable-link {
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: bold;
+}

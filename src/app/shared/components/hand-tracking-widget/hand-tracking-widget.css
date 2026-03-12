@@ -1,0 +1,21 @@
+/* ─── Container da widget ───────────────────────────────────────────────────── */
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Canvas transparente sobreposto ao conteúdo ───────────────────────────── */
+/* pointer-events: none → permite clicar "através" do canvas no conteúdo abaixo */
+.hand-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  pointer-events: none;
+  /* Espelha horizontalmente para corresponder ao reflexo da câmera */
+  transform: scaleX(-1);
+}

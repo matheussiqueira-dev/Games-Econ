@@ -1,0 +1,121 @@
+<div class="ambient-glow-top"></div>
+<div class="ambient-glow-bottom"></div>
+
+<main class="main-container">
+  <header class="header">
+    <div class="header-left">
+      <a class="back-link" href="play-dashboard">
+        <span class="material-icons-round">arrow_back_ios</span>
+        <span class="back-text">Lobby</span>
+      </a>
+      <div class="divider"></div>
+      <h1 class="game-title">{{ gameTitle || 'CYBER STRIKE: AG' }}</h1>
+    </div>
+    
+    <div class="header-right">
+      <div class="status-item">
+        <span class="status-label">Connection</span>
+        <span class="status-value connection">14MS / STABLE</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Performance</span>
+        <span class="status-value performance">144 FPS</span>
+      </div>
+      <button class="profile-btn">
+        <span class="material-icons-round">account_circle</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="game-panel">
+    <!-- Naruto game widget inside main container -->
+    @if (selectedGame === 'naruto') {
+      <div class="game-viewport">
+        <app-naruto></app-naruto>
+      </div>
+    }
+
+    <!-- Galaga game with hand-tracking steering -->
+    @if (selectedGame === 'galaga') {
+      <div class="game-viewport">
+        <app-galaga></app-galaga>
+      </div>
+    }
+
+    <!-- Default game view for other games -->
+    @if (selectedGame === 'default') {
+      <div class="game-viewport">
+        <div class="bg-image">
+          <img alt="Cyberpunk city backdrop" src="./assets/background.png" />
+        </div>
+        
+        <div class="game-content">
+          <div class="logo-container">
+            <div class="logo-outer-ring">
+              <div class="logo-inner-ring">
+                <img alt="Ag-games Logo" class="logo-image" src="./assets/logo.png" />
+              </div>
+            </div>
+          </div>
+          <p class="loading-text">Syncing Neural Link...</p>
+        </div>
+        
+        <div class="progress-bars">
+          <div class="progress-bar">
+            <div class="progress-fill blue"></div>
+          </div>
+          <div class="progress-bar small">
+            <div class="progress-fill purple"></div>
+          </div>
+        </div>
+        
+        <div class="version-info">
+          UID: 8821-X99-PROTOTYPE<br/>
+          VER: 1.0.4a-STABLE
+        </div>
+        
+        <div class="controls-overlay">
+          <div class="controls">
+          </div>
+        </div>
+        
+        <div class="glow-effect top-right"></div>
+        <div class="glow-effect bottom-left"></div>
+      </div>
+    }
+  </div>
+
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="footer-item">
+
+      </div>
+
+    </div>
+    
+    <div class="footer-right">
+      <div class="avatar-stack">
+        <div class="avatar"></div>
+        <div class="avatar"></div>
+        <div class="avatar"></div>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<div class="keyboard-shortcuts">
+  <div class="shortcut-item">
+    <kbd>ESC</kbd>
+    <span>Menu</span>
+  </div>
+  <div class="shortcut-divider"></div>
+  <div class="shortcut-item">
+    <kbd>F11</kbd>
+    <span>Fullscreen</span>
+  </div>
+  <div class="shortcut-divider"></div>
+  <div class="shortcut-item">
+    <kbd>M</kbd>
+    <span>Mute</span>
+  </div>
+</div>

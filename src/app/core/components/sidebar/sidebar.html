@@ -1,0 +1,33 @@
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+       <img  class="logo-image" src="assets/logo.png" alt="AG-GAMES Logo">
+    </div>
+    <h1 class="logo-text">AG-GAMES</h1>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="nav-item active" (click)="onNavigate('/home')">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-text">Home</span>
+    </a>
+    <a class="nav-item" (click)="onNavigate('/library')">
+      <span class="nav-icon">📁</span>
+      <span class="nav-text">Library</span>
+    </a>
+    <a class="nav-item" (click)="onNavigate('/store')">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-text">Store</span>
+    </a>
+    <a class="nav-item" (click)="onNavigate('/profile')">
+      <span class="nav-icon">👤</span>
+      <span class="nav-text">Profile</span>
+    </a>
+      <a class="nav-item" (click)="onNavigate('/login')">
+      <span class="nav-icon">🚪</span>
+      <span class="nav-text">Log out</span>
+    </a>
+  </nav>
+</aside>
+
+

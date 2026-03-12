@@ -1,0 +1,20 @@
+<div class="hybrid-field-wrap">
+	<input
+		[type]="inputType()"
+		[placeholder]="placeholder()"
+		[value]="value()"
+		(input)="onInput($event)"
+		class="hybrid-field-input"
+	/>
+	@if (type() === 'password') {
+		<button
+			type="button"
+			class="password-toggle-btn"
+			(click)="togglePasswordVisibility()"
+		>
+			<span class="material-symbols-outlined">
+				{{ showPassword() ? 'visibility_off' : 'visibility' }}
+			</span>
+		</button>
+	}
+</div>

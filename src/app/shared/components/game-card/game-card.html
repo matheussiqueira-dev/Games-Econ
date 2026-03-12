@@ -1,0 +1,13 @@
+<div class="game-card" (click)="onGameClick()">
+  <div class="game-thumbnail">
+    <img [src]="game().thumbnail" [alt]="game().title + ' thumbnail'" class="game-image">
+    <div class="play-overlay">
+      <div class="play-button">
+        <span class="play-icon">▶</span>
+      </div>
+    </div>
+    <div class="category-badge">{{ game().category }}</div>
+  </div>
+  <h4 class="game-title">{{ game().title }}</h4>
+  <p class="game-studio">{{ game().studio }}</p>
+</div>

@@ -1,0 +1,15 @@
+@if (isLoading) {
+  <div class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>Initializing Hand Recognition...</p>
+    </div>
+  </div>
+}
+
+<video id="v_src" autoplay playsinline></video>
+<canvas id="out"></canvas>
+<div class="darkness"></div>
+
+<video id="n" class="fx" src="assets/video/naruto.mp4" muted autoplay loop playsinline></video>
+<video id="s" class="fx" src="assets/video/sasuke.mp4" muted autoplay loop playsinline></video>

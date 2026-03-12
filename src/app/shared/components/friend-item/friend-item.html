@@ -1,0 +1,10 @@
+<div class="friend-item">
+  <div class="friend-avatar">
+    <img [src]="friend().avatar" [alt]="friend().username + ' avatar'" class="avatar-image">
+    <span class="status-indicator" [style.background-color]="statusColor()"></span>
+  </div>
+  <div class="friend-info">
+    <p class="friend-name">{{ friend().username }}</p>
+    <p class="friend-status" [style.color]="statusColor()">{{ statusText() }}</p>
+  </div>
+</div>

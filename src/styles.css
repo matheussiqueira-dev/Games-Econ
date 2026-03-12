@@ -1,0 +1,57 @@
+/* Cores e gradiente inspirados no dashboard futurista */
+
+:root {
+	--color-bg-dark: #1a093e;
+	--color-bg-purple: #3a1c6b;
+	--color-bg-pink: #a12c8e;
+	--color-bg-blue: #1e2a78;
+	--color-accent-cyan: #00ffe7;
+	--color-accent-pink: #ff2eae;
+	--color-accent-orange: #ff7c2e;
+	--color-accent-yellow: #ffe600;
+}
+
+.background-gradient {
+	min-height: 100vh;
+	width: 100vw;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	background: url('assets/background.png') center center / cover no-repeat;
+	overflow: hidden;
+}
+
+.main-card-center {
+	min-height: 100vh;
+	width: 100vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow: hidden;
+}
+
+body {
+	color: #fff;
+	font-family: 'Plus Jakarta Sans', 'Segoe UI', 'Roboto', Arial, sans-serif;
+	background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDDNfoPu4yTtFk2ct-oErBHi_y1rDwkFiNR724gkROAp2h0PZ81IdFJcIXKLrOJMuC1_e6yZySya2FtbbRxRRXv1DBvEGSaa7qRQiWczU7flBtzgqOlXcnkUtClnGUcHvlhdwFUrR8_YY-HDeBrXAsFCJG0omk93FiR4EACIeo3dGmagFiLtdYf5B2sdNQolOSktIOCXaVxwUeSieBAhv2mlwGQDvb4ZUZfhs6SH43LIzZATrR_a8wvHeZBkopJVQKUk-rnYU57KrnI');
+	background-size: cover;
+	background-position: center;
+	background-attachment: fixed;
+}
+
+/* ─── Hand-tracking virtual cursor: classe .ht-hover simula :hover ──────── */
+/* Aplica o cursor pointer em qualquer elemento "hovered" pelo tracking */
+.ht-hover {
+	cursor: pointer;
+}

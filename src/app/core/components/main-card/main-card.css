@@ -1,0 +1,18 @@
+.main-card-glass {
+  gap: 10px;
+  padding: 10px 10px;
+  border-radius: 24px;
+  background: rgba(40, 30, 60, 0.16);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 2px solid rgba(255,255,255,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  box-shadow:
+    0 0 32px 2px rgba(168, 85, 247, 0.18),
+    0 0 80px 4px rgba(0, 229, 255, 0.07),
+    inset 0 0 40px 0 rgba(100, 0, 200, 0.08);
+}
