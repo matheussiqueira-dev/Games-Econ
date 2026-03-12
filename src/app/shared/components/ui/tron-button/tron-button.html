@@ -1,0 +1,13 @@
+<button
+  class="tron-button"
+  [class.tron-button--solid]="variant() === 'solid'"
+  [class.tron-button--full]="fullWidth()"
+  [disabled]="disabled()"
+  [attr.type]="buttonType()"
+  (click)="onPress($event)"
+>
+  <span class="tron-button__scan"></span>
+  <span class="tron-button__label">
+    <ng-content />
+  </span>
+</button>

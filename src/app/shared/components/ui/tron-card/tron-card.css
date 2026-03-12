@@ -1,0 +1,136 @@
+:host {
+  display: block;
+}
+
+.tron-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--encom-border);
+  border-radius: var(--encom-radius-md);
+  background: linear-gradient(180deg, rgba(10, 15, 26, 0.94), rgba(7, 17, 29, 0.98));
+  box-shadow: var(--encom-shadow);
+  transition:
+    transform var(--system-transition),
+    box-shadow var(--system-transition),
+    border-color var(--system-transition);
+}
+
+.tron-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 14px #00e5ff;
+  border-color: var(--encom-border-strong);
+}
+
+.tron-card__media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.tron-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.tron-card:hover .tron-card__image {
+  transform: scale(1.04);
+}
+
+.tron-card__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.72)),
+    linear-gradient(120deg, rgba(0, 229, 255, 0.1), transparent 38%);
+}
+
+.tron-card__badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--encom-border);
+  border-radius: 999px;
+  background: rgba(5, 7, 10, 0.66);
+  color: var(--encom-cyan);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tron-card__body {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1.2rem;
+}
+
+.tron-card__subtitle {
+  margin: 0;
+  color: var(--encom-text-secondary);
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.tron-card__title {
+  font-size: 1.08rem;
+  line-height: 1.3;
+}
+
+.tron-card__summary,
+.tron-card__details {
+  margin: 0;
+  color: var(--encom-text-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.tron-card__details {
+  color: var(--encom-text-primary);
+}
+
+.tron-card__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.tron-card__action {
+  min-height: 40px;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid var(--encom-neon);
+  border-radius: 999px;
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--encom-neon);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition:
+    background var(--system-transition),
+    box-shadow var(--system-transition),
+    transform var(--system-transition);
+}
+
+.tron-card__action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.38);
+}
+
+.tron-card__action--secondary {
+  background: transparent;
+}
+
+@media (max-width: 640px) {
+  .tron-card__body {
+    padding: 1rem;
+  }
+
+  .tron-card__actions {
+    flex-direction: column;
+  }
+}

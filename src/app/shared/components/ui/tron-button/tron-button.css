@@ -1,0 +1,71 @@
+:host {
+  display: inline-flex;
+}
+
+.tron-button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0.8rem 1.25rem;
+  border: 1px solid var(--encom-neon);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--encom-neon);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    transform var(--system-transition),
+    box-shadow var(--system-transition),
+    background var(--system-transition),
+    color var(--system-transition);
+  overflow: hidden;
+}
+
+.tron-button--full {
+  width: 100%;
+}
+
+.tron-button--solid {
+  background: rgba(0, 229, 255, 0.12);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.18);
+}
+
+.tron-button__scan {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 0,
+    rgba(0, 229, 255, 0.14) 45%,
+    transparent 55%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.3s ease;
+}
+
+.tron-button__label {
+  position: relative;
+  z-index: 1;
+}
+
+.tron-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px #00e5ff;
+  background: #00e5ff10;
+}
+
+.tron-button:hover:not(:disabled) .tron-button__scan {
+  transform: translateX(120%);
+}
+
+.tron-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}

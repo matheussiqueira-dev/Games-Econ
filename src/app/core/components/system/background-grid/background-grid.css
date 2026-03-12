@@ -1,0 +1,58 @@
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.grid-layer,
+.glow-layer,
+.scan-layer {
+  position: absolute;
+  inset: 0;
+}
+
+.grid-layer {
+  background-image:
+    linear-gradient(var(--encom-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--encom-grid) 1px, transparent 1px);
+  filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.22));
+}
+
+.grid-layer--perspective {
+  inset: auto -15% -20%;
+  height: 70%;
+  opacity: 0.28;
+  background-size: 40px 40px;
+  animation: encom-grid-drift 28s linear infinite;
+  transform: perspective(1200px) rotateX(78deg) scale(1.8);
+  transform-origin: center bottom;
+}
+
+.grid-layer--flat {
+  opacity: 0.12;
+  background-size: 80px 80px;
+  animation: encom-grid-drift 40s linear infinite reverse;
+}
+
+.glow-layer {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0, 229, 255, 0.16), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(0, 184, 217, 0.18), transparent 20%),
+    radial-gradient(circle at 50% 100%, rgba(0, 229, 255, 0.16), transparent 40%);
+  animation: encom-pulse 12s ease-in-out infinite;
+}
+
+.scan-layer {
+  top: -40%;
+  height: 38%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(0, 229, 255, 0.05),
+    rgba(0, 229, 255, 0.12),
+    transparent
+  );
+  animation: encom-scan-sweep 10s linear infinite;
+}

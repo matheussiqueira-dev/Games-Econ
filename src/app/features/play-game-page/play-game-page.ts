@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Naruto } from '../../shared/components/games/naruto/naruto';
 import { Galaga } from '../../shared/components/games/galaga/galaga';
+import { EncomPanel } from '../../shared/components/ui/encom-panel/encom-panel';
 
 @Component({
   selector: 'app-play-game-page',
-  imports: [Naruto, Galaga],
+  imports: [Naruto, Galaga, RouterLink, EncomPanel],
   templateUrl: './play-game-page.html',
   styleUrl: './play-game-page.css',
 })
@@ -58,4 +59,3 @@ export class PlayGamePage implements OnInit {
     //   console.log('Fragment:', fragment);
     // });
   }
-

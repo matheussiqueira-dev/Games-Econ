@@ -1,0 +1,26 @@
+<article class="tron-card">
+  <div class="tron-card__media">
+    <img [alt]="title() + ' thumbnail'" [src]="image()" class="tron-card__image" />
+    <div class="tron-card__overlay"></div>
+    <span class="tron-card__badge">{{ category() || 'Arcade' }}</span>
+  </div>
+
+  <div class="tron-card__body">
+    <p class="tron-card__subtitle">{{ subtitle() }}</p>
+    <h3 class="tron-card__title">{{ title() }}</h3>
+    <p class="tron-card__summary">{{ summary() }}</p>
+
+    @if (expanded()) {
+      <p class="tron-card__details">{{ extendedDetails() }}</p>
+    }
+
+    <div class="tron-card__actions">
+      <button class="tron-card__action tron-card__action--secondary" type="button" (click)="toggleExpanded($event)">
+        {{ expanded() ? 'Minimize' : 'Expand' }}
+      </button>
+      <button class="tron-card__action" type="button" (click)="onSelect()">
+        {{ ctaLabel() }}
+      </button>
+    </div>
+  </div>
+</article>

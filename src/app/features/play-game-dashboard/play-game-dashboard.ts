@@ -7,10 +7,12 @@ import { GameService } from '../../shared/services/game.service';
 import { CurrentLoggedInUserStore } from '../../core/storage/current-logged-in-user.store';
 import { iGame } from '../../shared/interfaces/game.interface';
 import { HandTrackingWidget } from "../../shared/components/hand-tracking-widget/hand-tracking-widget";
+import { EncomPanel } from '../../shared/components/ui/encom-panel/encom-panel';
+import { TronButton } from '../../shared/components/ui/tron-button/tron-button';
 
 @Component({
   selector: 'app-play-game-page',
-  imports: [Sidebar, GameCard, ActivityItem, FriendItem, HandTrackingWidget],
+  imports: [Sidebar, GameCard, ActivityItem, FriendItem, HandTrackingWidget, EncomPanel, TronButton],
   templateUrl: './play-game-dashboard.html',
   styleUrls: ['./play-game-dashboard.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -44,4 +46,3 @@ export class PlayGameDashboard {
     console.log(`Navigating to: ${route}`);
   }
 }
-

@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.encom-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--encom-border);
+  border-radius: var(--encom-radius-lg);
+  background: var(--encom-panel-glass);
+  box-shadow: var(--encom-shadow);
+  backdrop-filter: blur(18px);
+}
+
+.encom-panel--elevated {
+  box-shadow: var(--encom-shadow-strong);
+}
+
+.encom-panel__scan {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(0, 229, 255, 0.12) 50%,
+    transparent 58%,
+    transparent 100%
+  );
+  animation: encom-panel-scan 9s linear infinite;
+}
+
+.encom-panel__content {
+  position: relative;
+  z-index: 1;
+  padding: 1.5rem;
+}
+
+.encom-panel--compact .encom-panel__content {
+  padding: 1rem;
+}

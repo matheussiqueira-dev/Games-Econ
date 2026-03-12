@@ -3,11 +3,13 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ClickableLink } from '../../shared/components/clickable-link/clickable-link';
 import { HybridField } from '../../shared/components/hybrid-field/hybrid-field';
+import { EncomPanel } from '../../shared/components/ui/encom-panel/encom-panel';
+import { TronButton } from '../../shared/components/ui/tron-button/tron-button';
 import { InputTypeEnum } from '../../shared/utils/enums';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ClickableLink, HybridField],
+  imports: [FormsModule, ClickableLink, HybridField, EncomPanel, TronButton],
   templateUrl: './login.html',
   styleUrl: './login.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,6 +1,19 @@
-/* ClickableLink styles */
 .clickable-link {
-	cursor: pointer;
-	text-decoration: underline;
-	font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition:
+    color var(--system-transition),
+    text-shadow var(--system-transition);
+}
+
+.clickable-link:hover {
+  color: var(--encom-cyan);
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
 }

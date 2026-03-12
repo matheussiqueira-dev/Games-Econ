@@ -1,97 +1,138 @@
 <app-hand-tracking-widget [handTrackingEnabled]="handTrackingEnabled">
   <div class="dashboard">
-    <app-sidebar (navigationClicked)="onNavigationClicked($event)"></app-sidebar>
+    <app-encom-panel class="sidebar-panel" [elevated]="true">
+      <app-sidebar (navigationClicked)="onNavigationClicked($event)"></app-sidebar>
+    </app-encom-panel>
 
     <main class="main-content">
-      <!-- Header -->
-      <header class="header">
-        <div class="search-container">
-          <span class="search-icon">🔍</span>
-          <input class="search-input" placeholder="Search games, players, store..." type="text" />
-        </div>
-
-        <div class="header-actions">
-          <div class="toggle-container">
-            <label for="hand-tracking-toggle" class="toggle-label">Hand Tracking</label>
-            <input id="hand-tracking-toggle" type="checkbox" [checked]="handTrackingEnabled" (change)="onHandTrackingToggle()" class="toggle-input" />
+      <app-encom-panel class="dashboard-header" [elevated]="true">
+        <div class="dashboard-header__row">
+          <div class="dashboard-header__copy">
+            <span class="encom-kicker">ENCOM Command Grid</span>
+            <h1 class="dashboard-header__title">Arcade Operations</h1>
+            <p class="dashboard-header__subtitle">
+              Holographic navigation, live telemetry and gesture-driven control modules.
+            </p>
           </div>
 
-          <div class="user-profile">
-            <div class="user-info">
-              <p class="user-name">{{ currentUser()?.username ?? 'Player' }}</p>
-              <p class="user-level">Lv. 42 Warrior</p>
+          <div class="dashboard-header__actions">
+            <label class="search-shell">
+              <span class="material-icons-round search-shell__icon">manage_search</span>
+              <input class="search-shell__input" placeholder="Scan games, pilots, telemetry..." type="text" />
+            </label>
+
+            <label class="tracking-toggle">
+              <span class="tracking-toggle__label">Hand Tracking</span>
+              <span class="tracking-toggle__switch">
+                <input
+                  id="hand-tracking-toggle"
+                  type="checkbox"
+                  [checked]="handTrackingEnabled"
+                  (change)="onHandTrackingToggle()"
+                  class="tracking-toggle__input"
+                />
+                <span class="tracking-toggle__slider"></span>
+              </span>
+            </label>
+
+            <div class="user-profile">
+              <div class="user-profile__copy">
+                <p class="user-profile__name">{{ currentUser()?.username ?? 'Player Zero' }}</p>
+                <p class="user-profile__role">ENCOM Pilot / LV 42</p>
+              </div>
+              <img class="user-profile__avatar" src="assets/logo.png" alt="User avatar" />
             </div>
-            <img class="user-avatar"
-              src="assets/logo.png"
-              alt="User avatar">
-          </div>
-
-          <div class="profile-settings">
-  
           </div>
         </div>
-      </header>
+      </app-encom-panel>
 
-      <div class="content">
-        <!-- Featured Game Section -->
-        <section class="featured-section">
-          <div class="featured-background" [style.background-image]="'url(' + featuredGame().heroImage + ')'">
-            <div class="featured-overlay"></div>
-            <div class="featured-content">
-              <span class="trending-badge">Trending Now</span>
-              <h2 class="featured-title">
-                {{ featuredGame().title.split(':')[0] }}:<br>
-                <span class="featured-subtitle">{{ featuredGame().title.split(':')[1] || 'Neon Streets' }}</span>
-              </h2>
-              <p class="featured-description">{{ featuredGame().description }}</p>
-              <div class="featured-actions">
-                <button class="play-button" (click)="onPlayFeatured()">
-                  <span class="play-icon">▶</span> Play Now
-                </button>
-                <button class="details-button">Details</button>
+      <div class="dashboard-grid">
+        <app-encom-panel class="featured-panel" [elevated]="true">
+          <div class="featured-panel__surface" [style.background-image]="'url(' + featuredGame().heroImage + ')'">
+            <div class="featured-panel__overlay"></div>
+
+            <div class="featured-panel__content">
+              <div class="featured-panel__meta">
+                <span class="encom-kicker">Trending Module</span>
+                <span class="featured-panel__tag">{{ featuredGame().studio }}</span>
+              </div>
+
+              <h2 class="featured-panel__title">{{ featuredGame().title }}</h2>
+              <p class="featured-panel__description">{{ featuredGame().description }}</p>
+
+              <div class="featured-panel__stats">
+                <div class="featured-stat">
+                  <span class="featured-stat__label">Category</span>
+                  <strong class="featured-stat__value">{{ featuredGame().category || 'Arcade' }}</strong>
+                </div>
+                <div class="featured-stat">
+                  <span class="featured-stat__label">Latency</span>
+                  <strong class="featured-stat__value">14 MS</strong>
+                </div>
+                <div class="featured-stat">
+                  <span class="featured-stat__label">Glide Sync</span>
+                  <strong class="featured-stat__value">ONLINE</strong>
+                </div>
+              </div>
+
+              <div class="featured-panel__actions">
+                <app-tron-button [variant]="'solid'" (pressed)="onPlayFeatured()">Deploy Module</app-tron-button>
+                <app-tron-button>Inspect Feed</app-tron-button>
               </div>
             </div>
           </div>
-        </section>
+        </app-encom-panel>
 
-        <!-- Recommended Games -->
-        <section class="recommended-section">
-          <div class="section-header">
-            <h3 class="section-title">Recommended for You</h3>
-            <a class="view-all-link">View All</a>
+        <app-encom-panel class="catalog-panel">
+          <div class="section-heading">
+            <div>
+              <span class="encom-kicker">Library Index</span>
+              <h3 class="section-heading__title">Recommended Simulations</h3>
+            </div>
+
+            <app-tron-button>View All</app-tron-button>
           </div>
+
           <div class="games-grid">
             @for (game of recommendedGames(); track game.id) {
-            <app-game-card [game]="game" (gameSelected)="onGameSelected($event)"></app-game-card>
+              <app-game-card [game]="game" (gameSelected)="onGameSelected($event)"></app-game-card>
             }
           </div>
-        </section>
+        </app-encom-panel>
 
-        <!-- Bottom Section -->
-        <section class="bottom-section">
-          <!-- Recent Activity -->
-          <div class="activity-section">
-            <h3 class="section-title">Recent Activity</h3>
+        <div class="telemetry-grid">
+          <app-encom-panel class="activity-panel">
+            <div class="section-heading section-heading--tight">
+              <div>
+                <span class="encom-kicker">Live Telemetry</span>
+                <h3 class="section-heading__title">Recent Activity</h3>
+              </div>
+            </div>
+
             <div class="activity-list">
               @for (activity of activities(); track activity.id) {
-              <app-activity-item [activity]="activity"></app-activity-item>
+                <app-activity-item [activity]="activity"></app-activity-item>
               }
             </div>
-          </div>
+          </app-encom-panel>
 
-          <!-- Top Friends -->
-          <div class="friends-section">
-            <h3 class="section-title">Top Friends</h3>
-            <div class="friends-panel">
-              <div class="friends-list">
-                @for (friend of friends(); track friend.id) {
-                <app-friend-item [friend]="friend"></app-friend-item>
-                }
+          <app-encom-panel class="friends-panel">
+            <div class="section-heading section-heading--tight">
+              <div>
+                <span class="encom-kicker">Pilot Network</span>
+                <h3 class="section-heading__title">Active Friends</h3>
               </div>
-              <button class="see-all-friends">See All Friends</button>
             </div>
-          </div>
-        </section>
+
+            <div class="friends-list">
+              @for (friend of friends(); track friend.id) {
+                <app-friend-item [friend]="friend"></app-friend-item>
+              }
+            </div>
+
+            <app-tron-button [fullWidth]="true">See All Friends</app-tron-button>
+          </app-encom-panel>
+        </div>
       </div>
     </main>
   </div>

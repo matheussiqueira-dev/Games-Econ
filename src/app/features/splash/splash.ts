@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Certifique-se de instalar three.js: npm install three
@@ -10,36 +10,52 @@ import * as THREE from 'three';
   templateUrl: './splash.html',
   styleUrls: ['./splash.css'],
 })
-export class Splash implements AfterViewInit {
+export class Splash implements AfterViewInit, OnDestroy {
+  private logoTimeoutId?: number;
+  private navigationTimeoutId?: number;
+  private animationFrameId?: number;
+  private resizeHandler?: () => void;
+  private renderer?: THREE.WebGLRenderer;
+
   constructor(private router: Router) {}
 
   ngAfterViewInit() {
-    // Fade-in dos títulos
-    setTimeout(() => {
-      const title = document.querySelector('.title') as HTMLElement;
-      if (title) title.style.display = 'block';
-      const source = document.querySelector('.source') as HTMLElement;
-      if (source) source.style.display = 'block';
-    }, 400);
-
     // Fade-in da logo
     const logo = document.querySelector('.logo-fade') as HTMLElement;
     if (logo) {
-      setTimeout(() => {
+      this.logoTimeoutId = window.setTimeout(() => {
         logo.style.opacity = '1';
-      }, 100); // pequeno delay para garantir renderização
+      }, 100);
     }
 
-    // Efeito Three.js
     this.initThreeJsSplash();
 
-    // Navegar para home após 3 segundos
-    setTimeout(() => {
+    this.navigationTimeoutId = window.setTimeout(() => {
       this.router.navigate(['/login']);
     }, 3000);
   }
 
-  initThreeJsSplash() {
+  ngOnDestroy(): void {
+    if (this.logoTimeoutId) {
+      window.clearTimeout(this.logoTimeoutId);
+    }
+
+    if (this.navigationTimeoutId) {
+      window.clearTimeout(this.navigationTimeoutId);
+    }
+
+    if (this.animationFrameId) {
+      window.cancelAnimationFrame(this.animationFrameId);
+    }
+
+    if (this.resizeHandler) {
+      window.removeEventListener('resize', this.resizeHandler);
+    }
+
+    this.renderer?.dispose();
+  }
+
+  private initThreeJsSplash() {
     class Plane {
       uniforms: any;
       mesh: any;
@@ -172,28 +188,32 @@ export class Splash implements AfterViewInit {
     const canvas = document.getElementById('canvas-webgl') as HTMLCanvasElement;
     if (!canvas) return;
     const renderer = new THREE.WebGLRenderer({ antialias: false, canvas });
+    this.renderer = renderer;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(19, window.innerWidth / window.innerHeight, 1, 10000);
     const clock = new THREE.Clock();
     const plane = new Plane();
 
-    function resizeWindow() {
+    const resizeWindow = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
-    }
+    };
+
+    this.resizeHandler = resizeWindow;
     window.addEventListener('resize', resizeWindow);
 
-    function render() {
+    const render = () => {
       plane.render(clock.getDelta());
       renderer.render(scene, camera);
-    }
-    function renderLoop() {
+    };
+
+    const renderLoop = () => {
       render();
-      requestAnimationFrame(renderLoop);
-    }
+      this.animationFrameId = requestAnimationFrame(renderLoop);
+    };
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 1);
