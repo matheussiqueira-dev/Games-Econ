@@ -1,6 +1,6 @@
-# AgGames
+# Games-ECON
 
-AgGames é uma plataforma de jogos construída com Angular que demonstra integração de recursos de visão computacional para experiências interativas. O projeto explora soluções de rastreamento de mãos e gestos usando o MediaPipe para permitir controles e interações sem contato dentro de mini-jogos (ex.: Galaga, jogos em desenvolvimento, etc.).
+Games-ECON é uma plataforma de jogos construída com Angular que demonstra integração de recursos de visão computacional para experiências interativas. O projeto explora soluções de rastreamento de mãos e gestos usando o MediaPipe para permitir controles e interações sem contato dentro de mini-jogos (ex.: Galaga, jogos em desenvolvimento, etc.).
 
 ## Visão Geral
 
@@ -59,5 +59,4 @@ Observação: para usar os módulos de visão computacional (MediaPipe/WebAssemb
 
 - MediaPipe: https://developers.google.com/mediapipe
 - Angular: https://angular.io
-
 

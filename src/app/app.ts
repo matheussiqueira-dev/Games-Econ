@@ -11,5 +11,5 @@ import { WhatsAppButton } from './core/components/system/whats-app-button/whats-
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('ag-games');
+  protected readonly title = signal('Games-ECON');
 }

@@ -392,7 +392,7 @@ export const appConfig: ApplicationConfig = {
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('ag-games');
+  protected readonly title = signal('Games-ECON');
 }
 ```
 
