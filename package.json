@@ -1,17 +1,27 @@
 {
   "name": "games-econ",
-  "version": "0.0.0",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
-  },
+  "version": "1.0.0",
+  "description": "Plataforma arcade com controle por rastreamento de maos via MediaPipe.",
+  "author": "Matheus Siqueira <contact@matheussiqueira.dev> (https://www.matheussiqueira.dev/)",
+  "license": "MIT",
   "private": true,
   "packageManager": "npm@11.11.0",
   "engines": {
-    "node": "24.x"
+    "node": "24.x",
+    "npm": ">=11"
+  },
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "start:prod": "ng serve --configuration production",
+    "build": "ng build",
+    "build:prod": "ng build --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "test:ci": "ng test -- --run",
+    "lint": "npx prettier --check \"src/**/*.{ts,html,css}\"",
+    "lint:fix": "npx prettier --write \"src/**/*.{ts,html,css}\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@angular/common": "^21.2.0",

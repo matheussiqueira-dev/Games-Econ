@@ -1,83 +1,80 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
+import { LoggerService } from '../../core/services/logger.service';
+import { environment } from '../../../environments/environment';
+import type {
+  HandResults,
+  HandsOptions,
+  NormalizedLandmark,
+} from '../../../types/mediapipe';
 
-// ─── Tipos globais do MediaPipe (carregados via CDN) ─────────────────────────
-declare function drawConnectors(ctx: CanvasRenderingContext2D, landmarks: any, connections: any, style: any): void;
-declare function drawLandmarks(ctx: CanvasRenderingContext2D, landmarks: any, style: any): void;
-declare const HAND_CONNECTIONS: any;
-declare class Hands {
-  constructor(config: any);
-  setOptions(options: any): void;
-  onResults(callback: (results: any) => void): void;
-  send(input: any): Promise<void>;
-  close(): void;
-}
-declare class Camera {
-  constructor(video: HTMLVideoElement, config: any);
-  start(): void;
-  stop(): void;
-}
+export type { HandResults, NormalizedLandmark };
 
-// ─── Interface de configuração do MediaPipe ───────────────────────────────────
-export interface HandsConfig {
-  maxNumHands: number;
-  modelComplexity: number;
-  minDetectionConfidence: number;
-  minTrackingConfidence: number;
+export type HandTrackingConfig = Pick<
+  HandsOptions,
+  'maxNumHands' | 'modelComplexity' | 'minDetectionConfidence' | 'minTrackingConfidence'
+>;
+
+interface RetryConfig {
+  maxAttempts: number;
+  baseDelayMs: number;
+  maxDelayMs: number;
 }
 
-// ─── Interface do canvas para desenho dos landmarks ──────────────────────────
-export interface DrawingElements {
-  videoElement: HTMLVideoElement;
-  canvasElement: HTMLCanvasElement;
-}
+const DEFAULT_HANDS_CONFIG: HandTrackingConfig = {
+  maxNumHands: 2,
+  modelComplexity: 1,
+  minDetectionConfidence: environment.handDetectionMinConfidence,
+  minTrackingConfidence: environment.handDetectionMinConfidence,
+};
 
-@Injectable({
-  providedIn: 'root', // Singleton — uma única instância para toda a aplicação
-})
-export class HandTrackingService {
+const DEFAULT_RETRY: RetryConfig = {
+  maxAttempts: 5,
+  baseDelayMs: 1000,
+  maxDelayMs: 16000,
+};
 
-  // Instâncias internas do MediaPipe
-  private hands?: any;
-  private camera?: any;
+/**
+ * Servico singleton para rastreamento de maos via MediaPipe.
+ *
+ * Responsabilidades:
+ * - Inicializar o modelo MediaPipe Hands (com retry exponencial).
+ * - Gerenciar o ciclo de vida da camera (start / pause / resume / stop).
+ * - Expor helpers de desenho e deteccao de gestos.
+ */
+@Injectable({ providedIn: 'root' })
+export class HandTrackingService implements OnDestroy {
+  private hands?: InstanceType<typeof Hands>;
+  private camera?: InstanceType<typeof Camera>;
+  private retryAttempt = 0;
+  private retryTimeoutId?: ReturnType<typeof setTimeout>;
 
-  // Configuração padrão do modelo
-  private defaultConfig: HandsConfig = {
-    maxNumHands: 2,
-    modelComplexity: 1,
-    minDetectionConfidence: 0.5,
-    minTrackingConfidence: 0.5,
-  };
+  constructor(private readonly logger: LoggerService) {}
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // initialize()
-  // Inicializa o MediaPipe Hands e a Camera.
-  // Recebe o elemento de vídeo, o callback onResults e configurações opcionais.
-  // O callback é definido pelo COMPONENTE — cada feature passa o seu próprio.
-  // ─────────────────────────────────────────────────────────────────────────
+  ngOnDestroy(): void {
+    this.stop();
+  }
+
   async initialize(
     videoElement: HTMLVideoElement,
-    onResultsCallback: (results: any) => void,
-    configOverrides?: Partial<HandsConfig>
+    onResultsCallback: (results: HandResults) => void,
+    configOverrides?: Partial<HandTrackingConfig>
   ): Promise<void> {
-    if (typeof Hands === 'undefined' || typeof Camera === 'undefined') {
-      console.error('[HandTrackingService] MediaPipe não carregado ainda, tentando novamente...');
-      setTimeout(() => this.initialize(videoElement, onResultsCallback, configOverrides), 1000);
+    if (!this.isMediaPipeLoaded()) {
+      await this.waitForMediaPipe(videoElement, onResultsCallback, configOverrides);
       return;
     }
 
-    const config = { ...this.defaultConfig, ...configOverrides };
+    this.retryAttempt = 0;
 
-    // Cria e configura o detector de mãos
+    const config: HandTrackingConfig = { ...DEFAULT_HANDS_CONFIG, ...configOverrides };
+
     this.hands = new Hands({
-      locateFile: (f: string) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
+      locateFile: (file: string) => `${environment.mediapipeCdn}/${file}`,
     });
 
     this.hands.setOptions(config);
-
-    // Registra o callback definido pelo componente
     this.hands.onResults(onResultsCallback);
 
-    // Cria a câmera e envia cada frame para o detector
     this.camera = new Camera(videoElement, {
       onFrame: async () => {
         if (this.hands) {
@@ -85,92 +82,159 @@ export class HandTrackingService {
         }
       },
       width: 1280,
-      height: 720
+      height: 720,
     });
+
+    this.logger.debug('[HandTrackingService] Inicializado com sucesso.');
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // start() — inicia a câmera e o loop de detecção
-  // ─────────────────────────────────────────────────────────────────────────
   async start(): Promise<void> {
     if (!this.camera) {
-      console.error('[HandTrackingService] Câmera não inicializada. Chame initialize() primeiro.');
+      this.logger.error('[HandTrackingService] start() chamado antes de initialize().');
       return;
     }
     await this.camera.start();
-    console.log('[HandTrackingService] Câmera iniciada.');
+    this.logger.debug('[HandTrackingService] Camera iniciada.');
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // pauseCamera() — pausa apenas a câmera, mantém o modelo Hands vivo
-  // Use quando quiser desabilitar temporariamente sem recarregar o modelo CDN
-  // ─────────────────────────────────────────────────────────────────────────
   pauseCamera(): void {
-    try { this.camera?.stop?.(); } catch (e) { console.log('[HandTrackingService] Camera pause:', e); }
+    try {
+      this.camera?.stop();
+    } catch (err) {
+      this.logger.warn('[HandTrackingService] Falha ao pausar camera.', err);
+    }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // resumeCamera() — retoma a câmera sem precisar reinicializar o modelo
-  // ─────────────────────────────────────────────────────────────────────────
   async resumeCamera(): Promise<void> {
     if (!this.camera) {
-      console.error('[HandTrackingService] Câmera não inicializada. Chame initialize() primeiro.');
+      this.logger.error('[HandTrackingService] resumeCamera() chamado antes de initialize().');
       return;
     }
-    try { await this.camera.start(); } catch (e) { console.log('[HandTrackingService] Camera resume:', e); }
+    try {
+      await this.camera.start();
+      this.logger.debug('[HandTrackingService] Camera retomada.');
+    } catch (err) {
+      this.logger.warn('[HandTrackingService] Falha ao retomar camera.', err);
+    }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // stop() — para TUDO e libera recursos (use no ngOnDestroy do componente)
-  // ─────────────────────────────────────────────────────────────────────────
   stop(): void {
-    try { this.camera?.stop?.(); } catch (e) { console.log('[HandTrackingService] Camera stop:', e); }
-    try { this.hands?.close?.(); } catch (e) { console.log('[HandTrackingService] Hands close:', e); }
+    this.clearRetryTimeout();
+
+    try { this.camera?.stop(); }
+    catch (err) { this.logger.warn('[HandTrackingService] Erro ao parar camera.', err); }
+
+    try { this.hands?.close(); }
+    catch (err) { this.logger.warn('[HandTrackingService] Erro ao fechar Hands.', err); }
+
     this.camera = undefined;
-    this.hands = undefined;
+    this.hands  = undefined;
+    this.retryAttempt = 0;
+
+    this.logger.debug('[HandTrackingService] Recursos liberados.');
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // drawHandSkeleton() — desenha o esqueleto da mão no canvas
-  // Função genérica reutilizável por qualquer componente
-  // ─────────────────────────────────────────────────────────────────────────
-  drawHandSkeleton(ctx: CanvasRenderingContext2D, landmarks: any): void {
+  drawHandSkeleton(ctx: CanvasRenderingContext2D, landmarks: NormalizedLandmark[]): void {
     ctx.save();
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur  = 10;
     ctx.shadowColor = '#00fbff';
+
     if (typeof drawConnectors !== 'undefined' && typeof HAND_CONNECTIONS !== 'undefined') {
       drawConnectors(ctx, landmarks, HAND_CONNECTIONS, { color: '#00d4ff', lineWidth: 3 });
     }
     if (typeof drawLandmarks !== 'undefined') {
       drawLandmarks(ctx, landmarks, { color: '#ffffff', lineWidth: 1, radius: 2 });
     }
+
     ctx.restore();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // checkOpen() — detecta se uma mão está aberta
-  // Compara a distância da ponta de cada dedo ao pulso com a distância da
-  // articulação do meio ao pulso. Se a ponta está mais longe → dedo aberto.
-  // Retorna true se 3 ou mais dedos estiverem abertos.
-  // ─────────────────────────────────────────────────────────────────────────
-  checkFingers(landmarks: any[], minFingers: number = 3): boolean {
-    let count = 0;
-    const wrist = landmarks[0];           // ponto 0 = pulso
-    const tips = [8, 12, 16, 20];         // pontas dos dedos indicador→mínimo
-    const pips = [6, 10, 14, 18];         // articulações do meio
+  /**
+   * Retorna true se pelo menos minFingers dedos estiverem abertos.
+   * Indices MediaPipe: 0=pulso, 8/12/16/20=pontas, 6/10/14/18=articulacoes PIP.
+   */
+  checkFingers(landmarks: NormalizedLandmark[], minFingers = 3): boolean {
+    const wrist = landmarks[0];
+    const tips  = [8, 12, 16, 20] as const;
+    const pips  = [6, 10, 14, 18] as const;
+    let openCount = 0;
 
     for (let i = 0; i < tips.length; i++) {
       const tip = landmarks[tips[i]];
       const pip = landmarks[pips[i]];
       const distTip = Math.hypot(tip.x - wrist.x, tip.y - wrist.y);
       const distPip = Math.hypot(pip.x - wrist.x, pip.y - wrist.y);
-      if (distTip > distPip) count++;
+      if (distTip > distPip) openCount++;
     }
 
-    return count >= minFingers;
+    return openCount >= minFingers;
   }
 
-  
+  /**
+   * Detecta gesto de pinca entre polegar (4) e indicador (8).
+   * Limiar em espaco normalizado 0-1; ajuste empiricamente.
+   */
+  checkPinch(landmarks: NormalizedLandmark[], threshold = 0.05): boolean {
+    const thumb = landmarks[4];
+    const index = landmarks[8];
+    const dist  = Math.hypot(thumb.x - index.x, thumb.y - index.y);
+    return dist < threshold;
+  }
+
+  /**
+   * Suavizacao exponencial (EMA) para reduzir jitter dos landmarks.
+   * alpha=1 sem suavizacao, alpha=0 ignora frame atual.
+   */
+  smoothLandmark(
+    raw: NormalizedLandmark,
+    prev: NormalizedLandmark,
+    alpha = 0.7
+  ): NormalizedLandmark {
+    return {
+      x: alpha * raw.x + (1 - alpha) * prev.x,
+      y: alpha * raw.y + (1 - alpha) * prev.y,
+      z: alpha * raw.z + (1 - alpha) * prev.z,
+    };
+  }
+
+  private isMediaPipeLoaded(): boolean {
+    return typeof Hands !== 'undefined' && typeof Camera !== 'undefined';
+  }
+
+  private async waitForMediaPipe(
+    videoElement: HTMLVideoElement,
+    callback: (results: HandResults) => void,
+    configOverrides?: Partial<HandTrackingConfig>
+  ): Promise<void> {
+    if (this.retryAttempt >= DEFAULT_RETRY.maxAttempts) {
+      this.logger.error(
+        `[HandTrackingService] MediaPipe nao carregado apos ${DEFAULT_RETRY.maxAttempts} tentativas. Verifique os scripts CDN no index.html.`
+      );
+      return;
+    }
+
+    const delay = Math.min(
+      DEFAULT_RETRY.baseDelayMs * Math.pow(2, this.retryAttempt),
+      DEFAULT_RETRY.maxDelayMs
+    );
+
+    this.retryAttempt++;
+    this.logger.warn(
+      `[HandTrackingService] MediaPipe nao disponivel. Tentativa ${this.retryAttempt}/${DEFAULT_RETRY.maxAttempts} em ${delay}ms.`
+    );
+
+    await new Promise<void>((resolve) => {
+      this.retryTimeoutId = setTimeout(async () => {
+        await this.initialize(videoElement, callback, configOverrides);
+        resolve();
+      }, delay);
+    });
+  }
+
+  private clearRetryTimeout(): void {
+    if (this.retryTimeoutId !== undefined) {
+      clearTimeout(this.retryTimeoutId);
+      this.retryTimeoutId = undefined;
+    }
+  }
 }
-
-

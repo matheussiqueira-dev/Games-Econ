@@ -1,0 +1,131 @@
+/**
+ * Design Tokens — Games-ECON
+ *
+ * Fonte unica de verdade para cores, espacamentos, tipografia e animacoes.
+ * Importe antes de qualquer outra folha de estilo:
+ *   @import './styles/design-tokens.css';
+ *
+ * Creditos: Matheus Siqueira — https://www.matheussiqueira.dev/
+ */
+
+:root {
+  /* ── Paleta base Encom ──────────────────────────────────────────────── */
+  --color-black:       #000000;
+  --color-surface:     #05070a;
+  --color-panel:       #0a0f1a;
+  --color-panel-glass: rgba(10, 15, 26, 0.85);
+  --color-panel-solid: #07111d;
+
+  /* ── Neon / Ciano ───────────────────────────────────────────────────── */
+  --color-neon:        #00e5ff;
+  --color-neon-light:  #33f3ff;
+  --color-neon-dark:   #00b8d9;
+  --color-neon-glow:   #00ffff;
+
+  /* ── Roxo secundario ────────────────────────────────────────────────── */
+  --color-purple:      #c084fc;
+  --color-purple-light:#d1a6fd;
+  --color-purple-dark: #8b5cf6;
+
+  /* ── Feedback semantico ─────────────────────────────────────────────── */
+  --color-success:     #22c55e;
+  --color-warning:     #f59e0b;
+  --color-error:       #ef4444;
+  --color-info:        #3b82f6;
+
+  /* ── Texto ──────────────────────────────────────────────────────────── */
+  --color-text-primary:   #e6ffff;
+  --color-text-secondary: #8fa6b2;
+  --color-text-muted:     #4a6070;
+  --color-text-on-neon:   #000000;
+
+  /* ── Bordas ─────────────────────────────────────────────────────────── */
+  --color-border:        rgba(0, 229, 255, 0.25);
+  --color-border-strong: rgba(0, 229, 255, 0.50);
+  --color-border-subtle: rgba(0, 229, 255, 0.12);
+
+  /* ── Sombras / glow ─────────────────────────────────────────────────── */
+  --shadow-neon:        0 0 10px rgba(0, 229, 255, 0.34), inset 0 0 6px rgba(0, 229, 255, 0.13);
+  --shadow-neon-strong: 0 0 22px rgba(0, 229, 255, 0.34), inset 0 0 10px rgba(0, 229, 255, 0.13);
+  --shadow-card:        0 4px 32px rgba(0, 0, 0, 0.55);
+  --shadow-modal:       0 8px 64px rgba(0, 0, 0, 0.75);
+
+  /* ── Espacamento (escala de 8 px) ───────────────────────────────────── */
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+
+  /* ── Raios de borda ─────────────────────────────────────────────────── */
+  --radius-xs: 6px;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-full: 9999px;
+
+  /* ── Tipografia ─────────────────────────────────────────────────────── */
+  --font-ui:      'Rajdhani', sans-serif;
+  --font-body:    'Exo 2', sans-serif;
+  --font-display: 'Orbitron', sans-serif;
+
+  --text-xs:   0.65rem;
+  --text-sm:   0.78rem;
+  --text-base: 1rem;
+  --text-lg:   1.125rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+  --text-3xl:  1.875rem;
+
+  /* ── Layout ─────────────────────────────────────────────────────────── */
+  --content-width:     1280px;
+  --footer-height:     58px;
+  --sidebar-width:     240px;
+  --gutter:            clamp(1rem, 2.5vw, 2rem);
+
+  /* ── Animacoes ──────────────────────────────────────────────────────── */
+  --transition-fast:   100ms ease;
+  --transition-base:   200ms ease;
+  --transition-slow:   350ms ease;
+  --transition-spring: 350ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Z-index ────────────────────────────────────────────────────────── */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:   10;
+  --z-sticky:   20;
+  --z-dropdown: 100;
+  --z-modal:    200;
+  --z-overlay:  300;
+  --z-toast:    400;
+
+  /* ── Aliases para compatibilidade com estilos existentes ────────────── */
+  --encom-black:         var(--color-black);
+  --encom-surface:       var(--color-surface);
+  --encom-panel:         var(--color-panel);
+  --encom-neon:          var(--color-neon);
+  --encom-blue:          var(--color-neon-dark);
+  --encom-cyan:          var(--color-neon-light);
+  --encom-glow:          var(--color-neon-glow);
+  --encom-text-primary:  var(--color-text-primary);
+  --encom-text-secondary:var(--color-text-secondary);
+  --encom-border:        var(--color-border);
+  --encom-grid:          var(--color-border-subtle);
+  --encom-border-strong: var(--color-border-strong);
+  --encom-panel-glass:   var(--color-panel-glass);
+  --encom-panel-solid:   var(--color-panel-solid);
+  --encom-shadow:        var(--shadow-neon);
+  --encom-shadow-strong: var(--shadow-neon-strong);
+  --encom-radius-sm:     var(--radius-sm);
+  --encom-radius-md:     var(--radius-md);
+  --encom-radius-lg:     var(--radius-lg);
+  --encom-content-width: var(--content-width);
+  --system-footer-height:var(--footer-height);
+  --system-gutter:       var(--gutter);
+  --system-transition:   var(--transition-base);
+}
